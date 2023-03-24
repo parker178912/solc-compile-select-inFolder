@@ -1,7 +1,7 @@
-# solc-select
-A tool to quickly switch between Solidity compiler versions.
+# solc-select&compile-inFolder
+A tool to automatic detect solidity pragrama version, switch Solidity compiler versions and do compile for all .sol file in a folder.
 
-The tool is split into two CLI utilities:
+The tool is combine by two CLI utilities:
 - `solc-select`: manages installing and setting different `solc` compiler versions
 - `solc`: wrapper around `solc` which picks the right version according to what was set via `solc-select`
 
@@ -14,6 +14,7 @@ The downloaded binaries are stored in `~/.solc-select/artifacts/`.
 
 ```
 pip3 install solc-select
+python main.py <folder path>
 ```
 
 ### Running on ARM (Mac M1/M2)

@@ -45,7 +45,7 @@ def upgrade_architecture() -> None:
         raise argparse.ArgumentTypeError("Run `solc-select install --help` for more information")
 
 
-def current_version() -> (str, str):
+def current_version() -> tuple[str, str]:
     source = "SOLC_VERSION"
     version = os.environ.get(source)
     if not version:
@@ -68,23 +68,22 @@ def current_version() -> (str, str):
     return version, source
 
 
-def installed_versions() -> [str]:
+def installed_versions() -> list[str]:
     return [
         f.replace("solc-", "") for f in sorted(os.listdir(ARTIFACTS_DIR)) if f.startswith("solc-")
     ]
 
 
-def install_artifacts(versions: [str]) -> bool:
+def install_artifacts(versions: list[str]) -> bool:
     releases = get_available_versions()
     versions = [get_latest_release() if ver == "latest" else ver for ver in versions]
-
+    versions = ''.join(versions)
     for version, artifact in releases.items():
         if "all" not in versions:
             if versions and version not in versions:
                 continue
 
         (url, _) = get_url(version, artifact)
-
         if is_linux_0818(version):
             url = CRYTIC_SOLC_ARTIFACTS + artifact
             print(url)
@@ -144,7 +143,7 @@ def verify_checksum(version: str) -> None:
         )
 
 
-def get_soliditylang_checksums(version: str) -> (str, str):
+def get_soliditylang_checksums(version: str) -> tuple[str, str]:
     (_, list_url) = get_url(version=version)
     # pylint: disable=consider-using-with
     list_json = urllib.request.urlopen(list_url).read()
@@ -159,7 +158,7 @@ def get_soliditylang_checksums(version: str) -> (str, str):
     return matches[0]["sha256"], matches[0]["keccak256"]
 
 
-def get_url(version: str = "", artifact: str = "") -> (str, str):
+def get_url(version: str = "", artifact: str = "") -> tuple[str, str]:
     if soliditylang_platform() == LINUX_AMD64:
         if version != "" and is_older_linux(version):
             return (
@@ -218,14 +217,14 @@ def valid_install_arg(arg: str) -> str:
     return valid_version(arg)
 
 
-def get_installable_versions() -> [str]:
+def get_installable_versions() -> list[str]:
     installable = list(set(get_available_versions()) - set(installed_versions()))
     installable.sort(key=Version)
     return installable
 
 
 # pylint: disable=consider-using-with
-def get_available_versions() -> [str]:
+def get_available_versions() -> list[str]:
     (_, list_url) = get_url()
     list_json = urllib.request.urlopen(list_url).read()
     available_releases = json.loads(list_json)["releases"]
