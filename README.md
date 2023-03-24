@@ -15,6 +15,8 @@ The downloaded binaries are stored in `~/.solc-select/artifacts/`.
 ```
 pip3 install solc-select
 python main.py <folder path>
+# There are some examples in solidity_files, you can do following command to try it.
+python main.py solidity_files
 ```
 
 ### Running on ARM (Mac M1/M2)
