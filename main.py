@@ -81,11 +81,7 @@ def version_decide(file: str) -> CompiledData:
     print("    - Lowest version", checkversion.lowest_version)
     print("    - Latest version", checkversion.latest_version)
     if len(checkversion.available_versions) != 0:
-        if args.version == None:
-            custom_version = checkversion.lowest_version
-        else:
-            custom_version = args.version
-        data = compile(checkversion.sol_file, custom_version)
+        data = compile(checkversion.sol_file, checkversion.lowest_version)
         print(data)
     else:
         print("You don't have available versions, please check your pragma.")
